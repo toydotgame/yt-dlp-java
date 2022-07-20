@@ -10,6 +10,12 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
+      - uses: actions/setup-python@v1
+      - uses: BSFishy/pip-action@v1
+        with:
+          packages: |
+            yt-dlp
+
       - name: Cache Maven packages
         uses: actions/cache@v2
         with:
