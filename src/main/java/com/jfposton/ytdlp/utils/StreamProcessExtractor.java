@@ -12,21 +12,21 @@ public class StreamProcessExtractor extends Thread {
   private static final String GROUP_MINUTES = "minutes";
   private static final String GROUP_SECONDS = "seconds";
   private InputStream stream;
-  private StringBuffer buffer;
+  private StringBuilder buffer;
   private final DownloadProgressCallback callback;
 
-  private Pattern p =
-      Pattern.compile(
-          "\\[download\\]\\s+(?<percent>\\d+\\.\\d)% .* ETA (?<minutes>\\d+):(?<seconds>\\d+)");
+  private Pattern p = Pattern.compile(
+      "\\[download\\]\\s+(?<percent>\\d+\\.\\d)% .* ETA (?<minutes>\\d+):(?<seconds>\\d+)");
 
   public StreamProcessExtractor(
-      StringBuffer buffer, InputStream stream, DownloadProgressCallback callback) {
+      StringBuilder buffer, InputStream stream, DownloadProgressCallback callback) {
     this.stream = stream;
     this.buffer = buffer;
     this.callback = callback;
     this.start();
   }
 
+  @Override
   public void run() {
     try {
       StringBuilder currentLine = new StringBuilder();
@@ -41,6 +41,7 @@ public class StreamProcessExtractor extends Thread {
         currentLine.append((char) nextChar);
       }
     } catch (IOException ignored) {
+      ignored.printStackTrace();
     }
   }
 

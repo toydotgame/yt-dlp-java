@@ -13,7 +13,7 @@ public class YtDlpRequest {
   private String url;
 
   /** List of executable options */
-  private Map<String, String> options = new HashMap<String, String>();
+  private Map<String, String> options = new HashMap<>();
 
   public String getDirectory() {
     return directory;
@@ -89,8 +89,8 @@ public class YtDlpRequest {
     while (it.hasNext()) {
       Map.Entry<String, String> option = it.next();
 
-      String name = (String) option.getKey();
-      String value = (String) option.getValue();
+      String name = option.getKey();
+      String value = option.getValue();
 
       if (value == null)
         value = "";

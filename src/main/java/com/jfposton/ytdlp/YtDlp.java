@@ -16,10 +16,16 @@ import java.util.Map;
 /**
  * Provide an interface for yt-dlp executable
  *
- * <p>For more information on yt-dlp, please see <a
- * href="https://github.com/yt-dlp/yt-dlp/blob/master/README.md">yt-dlp Documentation</a>
+ * <p>
+ * For more information on yt-dlp, please see <a
+ * href="https://github.com/yt-dlp/yt-dlp/blob/master/README.md">yt-dlp
+ * Documentation</a>
  */
 public class YtDlp {
+
+  private YtDlp() {
+    // Private constructor is here to encourage static usage of this class
+  }
 
   /** yt-dlp executable name */
   protected static String executablePath = "yt-dlp";
@@ -48,7 +54,7 @@ public class YtDlp {
   /**
    * Execute yt-dlp request
    *
-   * @param request request object
+   * @param request  request object
    * @param callback callback
    * @return response object
    * @throws YtDlpException
@@ -63,8 +69,8 @@ public class YtDlp {
     YtDlpResponse ytDlpResponse;
     Process process;
     int exitCode;
-    StringBuffer outBuffer = new StringBuffer(); // stdout
-    StringBuffer errBuffer = new StringBuffer(); // stderr
+    StringBuilder outBuffer = new StringBuilder(); // stdout
+    StringBuilder errBuffer = new StringBuilder(); // stderr
     long startTime = System.nanoTime();
 
     String[] split = command.split(" ");
@@ -72,7 +78,8 @@ public class YtDlp {
     ProcessBuilder processBuilder = new ProcessBuilder(split);
 
     // Define directory if one is passed
-    if (directory != null) processBuilder.directory(new File(directory));
+    if (directory != null)
+      processBuilder.directory(new File(directory));
 
     try {
       process = processBuilder.start();
@@ -83,8 +90,7 @@ public class YtDlp {
     InputStream outStream = process.getInputStream();
     InputStream errStream = process.getErrorStream();
 
-    StreamProcessExtractor stdOutProcessor =
-        new StreamProcessExtractor(outBuffer, outStream, callback);
+    StreamProcessExtractor stdOutProcessor = new StreamProcessExtractor(outBuffer, outStream, callback);
     StreamGobbler stdErrProcessor = new StreamGobbler(errBuffer, errStream);
 
     try {
@@ -160,7 +166,7 @@ public class YtDlp {
    */
   public static List<VideoFormat> getFormats(String url) throws YtDlpException {
     VideoInfo info = getVideoInfo(url);
-    return info.formats;
+    return info.getFormats();
   }
 
   /**
@@ -172,7 +178,7 @@ public class YtDlp {
    */
   public static List<VideoThumbnail> getThumbnails(String url) throws YtDlpException {
     VideoInfo info = getVideoInfo(url);
-    return info.thumbnails;
+    return info.getThumbnails();
   }
 
   /**
@@ -184,7 +190,7 @@ public class YtDlp {
    */
   public static List<String> getCategories(String url) throws YtDlpException {
     VideoInfo info = getVideoInfo(url);
-    return info.categories;
+    return info.getCategories();
   }
 
   /**
@@ -196,7 +202,7 @@ public class YtDlp {
    */
   public static List<String> getTags(String url) throws YtDlpException {
     VideoInfo info = getVideoInfo(url);
-    return info.tags;
+    return info.getTags();
   }
 
   /**
