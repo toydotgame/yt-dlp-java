@@ -23,6 +23,14 @@
         <url>https://github.com/jfposton/yt-dlp-java</url>
     </scm>
 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/jfposton/yt-dlp-java</url>
+        </repository>
+    </distributionManagement>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jackson.version>2.13.3</jackson.version>
