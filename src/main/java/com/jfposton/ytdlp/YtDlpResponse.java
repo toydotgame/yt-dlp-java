@@ -1,11 +1,11 @@
-package com.sapher.youtubedl;
+package com.jfposton.ytdlp;
 
 import java.util.Map;
 
 /**
- * YoutubeDL response
+ * YtDlp response
  */
-public class YoutubeDLResponse {
+public class YtDlpResponse {
 
     private Map<String, String> options;
     private String command;
@@ -15,7 +15,8 @@ public class YoutubeDLResponse {
     private String directory;
     private int elapsedTime;
 
-    public YoutubeDLResponse(String command, Map<String, String> options, String directory, int exitCode, int elapsedTime, String out, String err) {
+    public YtDlpResponse(String command, Map<String, String> options, String directory, int exitCode, int elapsedTime,
+            String out, String err) {
         this.command = command;
         this.options = options;
         this.directory = directory;

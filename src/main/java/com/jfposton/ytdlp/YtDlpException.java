@@ -1,9 +1,9 @@
-package com.sapher.youtubedl;
+package com.jfposton.ytdlp;
 
 /**
- * YoutubeDL Exception
+ * YtDlp Exception
  */
-public class YoutubeDLException extends Exception {
+public class YtDlpException extends Exception {
 
     /**
      * Exception message
@@ -11,23 +11,26 @@ public class YoutubeDLException extends Exception {
     private String message;
 
     /**
-     * Construct YoutubeDLException with a message
+     * Construct YtDlpException with a message
+     * 
      * @param message
      */
-    public YoutubeDLException(String message) {
+    public YtDlpException(String message) {
         this.message = message;
     }
 
     /**
-     * Construct YoutubeDLException from another exception
+     * Construct YtDlpException from another exception
+     * 
      * @param e Any exception
      */
-    public YoutubeDLException(Exception e) {
+    public YtDlpException(Exception e) {
         message = e.getMessage();
     }
 
     /**
      * Get exception message
+     * 
      * @return exception message
      */
     @Override

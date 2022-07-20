@@ -20,3 +20,5 @@ target/
 # Gradle
 .gradle
 gradle
+
+.vscode/

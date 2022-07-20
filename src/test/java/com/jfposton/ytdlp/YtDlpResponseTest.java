@@ -1,9 +1,9 @@
-package com.sapher.youtubedl;
+package com.jfposton.ytdlp;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-public class YoutubeDLResponseTest {
+public class YtDlpResponseTest {
 
     @Test
     public void testTest() {

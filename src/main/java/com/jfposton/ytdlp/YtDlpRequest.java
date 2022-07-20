@@ -1,11 +1,11 @@
-package com.sapher.youtubedl;
+package com.jfposton.ytdlp;
 
 import java.util.*;
 
 /**
- * YoutubeDL request
+ * YtDlp request
  */
-public class YoutubeDLRequest {
+public class YtDlpRequest {
 
     /**
      * Executable working directory
@@ -57,30 +57,33 @@ public class YoutubeDLRequest {
     /**
      * Constructor
      */
-    public YoutubeDLRequest() {
+    public YtDlpRequest() {
 
     }
 
     /**
      * Construct a request with a videoUrl
+     * 
      * @param url
      */
-    public YoutubeDLRequest(String url) {
+    public YtDlpRequest(String url) {
         this.url = url;
     }
 
     /**
      * Construct a request with a videoUrl and working directory
+     * 
      * @param url
      * @param directory
      */
-    public YoutubeDLRequest(String url, String directory) {
+    public YtDlpRequest(String url, String directory) {
         this.url = url;
         this.directory = directory;
     }
 
     /**
      * Transform options to a string that the executable will execute
+     * 
      * @return Command string
      */
     protected String buildOptions() {
@@ -88,7 +91,7 @@ public class YoutubeDLRequest {
         StringBuilder builder = new StringBuilder();
 
         // Set Url
-        if(url != null)
+        if (url != null)
             builder.append(url + " ");
 
         // Build options strings
@@ -99,7 +102,8 @@ public class YoutubeDLRequest {
             String name = (String) option.getKey();
             String value = (String) option.getValue();
 
-            if(value == null) value = "";
+            if (value == null)
+                value = "";
 
             String optionFormatted = String.format("--%s %s", name, value).trim();
             builder.append(optionFormatted + " ");

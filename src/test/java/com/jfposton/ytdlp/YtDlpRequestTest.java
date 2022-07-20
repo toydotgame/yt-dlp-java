@@ -1,14 +1,16 @@
-package com.sapher.youtubedl;
+package com.jfposton.ytdlp;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-public class YoutubeDLRequestTest {
+import com.jfposton.ytdlp.YtDlpRequest;
+
+public class YtDlpRequestTest {
 
     @Test
     public void testBuildOptionStandalone() {
 
-        YoutubeDLRequest request = new YoutubeDLRequest();
+        YtDlpRequest request = new YtDlpRequest();
         request.setOption("help");
 
         Assert.assertEquals("--help", request.buildOptions());
@@ -17,7 +19,7 @@ public class YoutubeDLRequestTest {
     @Test
     public void testBuildOptionWithValue() {
 
-        YoutubeDLRequest request = new YoutubeDLRequest();
+        YtDlpRequest request = new YtDlpRequest();
         request.setOption("password", "1234");
 
         Assert.assertEquals("--password 1234", request.buildOptions());
@@ -26,7 +28,7 @@ public class YoutubeDLRequestTest {
     @Test
     public void testBuildChainOptionWithValue() {
 
-        YoutubeDLRequest request = new YoutubeDLRequest();
+        YtDlpRequest request = new YtDlpRequest();
         request.setOption("password", "1234");
         request.setOption("username", "1234");
 

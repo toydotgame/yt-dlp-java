@@ -1,4 +1,4 @@
-package com.sapher.youtubedl.mapper;
+package com.jfposton.ytdlp.mapper;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -43,5 +43,5 @@ public class VideoInfo {
     public ArrayList<String> tags;
     public ArrayList<VideoFormat> formats;
     public ArrayList<VideoThumbnail> thumbnails;
-    //public ArrayList<VideoSubtitle> subtitles;
+    // public ArrayList<VideoSubtitle> subtitles;
 }
