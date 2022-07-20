@@ -66,7 +66,7 @@ public class YtDlp {
         String directory = request.getDirectory();
         Map<String, String> options = request.getOption();
 
-        YtDlpResponse YtDlpResponse;
+        YtDlpResponse ytDlpResponse;
         Process process;
         int exitCode;
         StringBuffer outBuffer = new StringBuffer(); // stdout
@@ -112,9 +112,9 @@ public class YtDlp {
 
         int elapsedTime = (int) ((System.nanoTime() - startTime) / 1000000);
 
-        YtDlpResponse = new YtDlpResponse(command, options, directory, exitCode, elapsedTime, out, err);
+        ytDlpResponse = new YtDlpResponse(command, options, directory, exitCode, elapsedTime, out, err);
 
-        return YtDlpResponse;
+        return ytDlpResponse;
     }
 
     /**
