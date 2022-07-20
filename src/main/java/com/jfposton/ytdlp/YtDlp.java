@@ -16,10 +16,8 @@ import java.util.Map;
 /**
  * Provide an interface for yt-dlp executable
  *
- * <p>
- * For more information on yt-dlp, please see <a
- * href="https://github.com/yt-dlp/yt-dlp/blob/master/README.md">yt-dlp
- * Documentation</a>
+ * <p>For more information on yt-dlp, please see <a
+ * href="https://github.com/yt-dlp/yt-dlp/blob/master/README.md">yt-dlp Documentation</a>
  */
 public class YtDlp {
 
@@ -54,7 +52,7 @@ public class YtDlp {
   /**
    * Execute yt-dlp request
    *
-   * @param request  request object
+   * @param request request object
    * @param callback callback
    * @return response object
    * @throws YtDlpException
@@ -78,8 +76,7 @@ public class YtDlp {
     ProcessBuilder processBuilder = new ProcessBuilder(split);
 
     // Define directory if one is passed
-    if (directory != null)
-      processBuilder.directory(new File(directory));
+    if (directory != null) processBuilder.directory(new File(directory));
 
     try {
       process = processBuilder.start();
@@ -90,7 +87,8 @@ public class YtDlp {
     InputStream outStream = process.getInputStream();
     InputStream errStream = process.getErrorStream();
 
-    StreamProcessExtractor stdOutProcessor = new StreamProcessExtractor(outBuffer, outStream, callback);
+    StreamProcessExtractor stdOutProcessor =
+        new StreamProcessExtractor(outBuffer, outStream, callback);
     StreamGobbler stdErrProcessor = new StreamGobbler(errBuffer, errStream);
 
     try {
