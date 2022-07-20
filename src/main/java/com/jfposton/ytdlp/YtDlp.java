@@ -14,212 +14,206 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <p>
  * Provide an interface for yt-dlp executable
- * </p>
  *
- * <p>
- * For more information on yt-dlp, please see
- * <a href="https://github.com/yt-dlp/yt-dlp/blob/master/README.md">yt-dlp
- * Documentation</a>
- * </p>
+ * <p>For more information on yt-dlp, please see <a
+ * href="https://github.com/yt-dlp/yt-dlp/blob/master/README.md">yt-dlp Documentation</a>
  */
 public class YtDlp {
 
-    /**
-     * yt-dlp executable name
-     */
-    protected static String executablePath = "yt-dlp";
+  /** yt-dlp executable name */
+  protected static String executablePath = "yt-dlp";
 
-    /**
-     * Append executable name to command
-     * 
-     * @param command Command string
-     * @return Command string
-     */
-    protected static String buildCommand(String command) {
-        return String.format("%s %s", executablePath, command);
+  /**
+   * Append executable name to command
+   *
+   * @param command Command string
+   * @return Command string
+   */
+  protected static String buildCommand(String command) {
+    return String.format("%s %s", executablePath, command);
+  }
+
+  /**
+   * Execute yt-dlp request
+   *
+   * @param request request object
+   * @return response object
+   * @throws YtDlpException
+   */
+  public static YtDlpResponse execute(YtDlpRequest request) throws YtDlpException {
+    return execute(request, null);
+  }
+
+  /**
+   * Execute yt-dlp request
+   *
+   * @param request request object
+   * @param callback callback
+   * @return response object
+   * @throws YtDlpException
+   */
+  public static YtDlpResponse execute(YtDlpRequest request, DownloadProgressCallback callback)
+      throws YtDlpException {
+
+    String command = buildCommand(request.buildOptions());
+    String directory = request.getDirectory();
+    Map<String, String> options = request.getOption();
+
+    YtDlpResponse ytDlpResponse;
+    Process process;
+    int exitCode;
+    StringBuffer outBuffer = new StringBuffer(); // stdout
+    StringBuffer errBuffer = new StringBuffer(); // stderr
+    long startTime = System.nanoTime();
+
+    String[] split = command.split(" ");
+
+    ProcessBuilder processBuilder = new ProcessBuilder(split);
+
+    // Define directory if one is passed
+    if (directory != null) processBuilder.directory(new File(directory));
+
+    try {
+      process = processBuilder.start();
+    } catch (IOException e) {
+      throw new YtDlpException(e);
     }
 
-    /**
-     * Execute yt-dlp request
-     * 
-     * @param request request object
-     * @return response object
-     * @throws YtDlpException
-     */
-    public static YtDlpResponse execute(YtDlpRequest request) throws YtDlpException {
-        return execute(request, null);
+    InputStream outStream = process.getInputStream();
+    InputStream errStream = process.getErrorStream();
+
+    StreamProcessExtractor stdOutProcessor =
+        new StreamProcessExtractor(outBuffer, outStream, callback);
+    StreamGobbler stdErrProcessor = new StreamGobbler(errBuffer, errStream);
+
+    try {
+      stdOutProcessor.join();
+      stdErrProcessor.join();
+      exitCode = process.waitFor();
+    } catch (InterruptedException e) {
+
+      // process exited for some reason
+      throw new YtDlpException(e);
     }
 
-    /**
-     * Execute yt-dlp request
-     * 
-     * @param request  request object
-     * @param callback callback
-     * @return response object
-     * @throws YtDlpException
-     */
-    public static YtDlpResponse execute(YtDlpRequest request, DownloadProgressCallback callback) throws YtDlpException {
+    String out = outBuffer.toString();
+    String err = errBuffer.toString();
 
-        String command = buildCommand(request.buildOptions());
-        String directory = request.getDirectory();
-        Map<String, String> options = request.getOption();
-
-        YtDlpResponse ytDlpResponse;
-        Process process;
-        int exitCode;
-        StringBuffer outBuffer = new StringBuffer(); // stdout
-        StringBuffer errBuffer = new StringBuffer(); // stderr
-        long startTime = System.nanoTime();
-
-        String[] split = command.split(" ");
-
-        ProcessBuilder processBuilder = new ProcessBuilder(split);
-
-        // Define directory if one is passed
-        if (directory != null)
-            processBuilder.directory(new File(directory));
-
-        try {
-            process = processBuilder.start();
-        } catch (IOException e) {
-            throw new YtDlpException(e);
-        }
-
-        InputStream outStream = process.getInputStream();
-        InputStream errStream = process.getErrorStream();
-
-        StreamProcessExtractor stdOutProcessor = new StreamProcessExtractor(outBuffer, outStream, callback);
-        StreamGobbler stdErrProcessor = new StreamGobbler(errBuffer, errStream);
-
-        try {
-            stdOutProcessor.join();
-            stdErrProcessor.join();
-            exitCode = process.waitFor();
-        } catch (InterruptedException e) {
-
-            // process exited for some reason
-            throw new YtDlpException(e);
-        }
-
-        String out = outBuffer.toString();
-        String err = errBuffer.toString();
-
-        if (exitCode > 0) {
-            throw new YtDlpException(err);
-        }
-
-        int elapsedTime = (int) ((System.nanoTime() - startTime) / 1000000);
-
-        ytDlpResponse = new YtDlpResponse(command, options, directory, exitCode, elapsedTime, out, err);
-
-        return ytDlpResponse;
+    if (exitCode > 0) {
+      throw new YtDlpException(err);
     }
 
-    /**
-     * Get yt-dlp executable version
-     * 
-     * @return version string
-     * @throws YtDlpException
-     */
-    public static String getVersion() throws YtDlpException {
-        YtDlpRequest request = new YtDlpRequest();
-        request.setOption("version");
-        return YtDlp.execute(request).getOut();
+    int elapsedTime = (int) ((System.nanoTime() - startTime) / 1000000);
+
+    ytDlpResponse = new YtDlpResponse(command, options, directory, exitCode, elapsedTime, out, err);
+
+    return ytDlpResponse;
+  }
+
+  /**
+   * Get yt-dlp executable version
+   *
+   * @return version string
+   * @throws YtDlpException
+   */
+  public static String getVersion() throws YtDlpException {
+    YtDlpRequest request = new YtDlpRequest();
+    request.setOption("version");
+    return YtDlp.execute(request).getOut();
+  }
+
+  /**
+   * Retrieve all information available on a video
+   *
+   * @param url Video url
+   * @return Video info
+   * @throws YtDlpException
+   */
+  public static VideoInfo getVideoInfo(String url) throws YtDlpException {
+
+    // Build request
+    YtDlpRequest request = new YtDlpRequest(url);
+    request.setOption("dump-json");
+    request.setOption("no-playlist");
+    YtDlpResponse response = YtDlp.execute(request);
+
+    // Parse result
+    ObjectMapper objectMapper = new ObjectMapper();
+    VideoInfo videoInfo;
+
+    try {
+      videoInfo = objectMapper.readValue(response.getOut(), VideoInfo.class);
+    } catch (IOException e) {
+      throw new YtDlpException("Unable to parse video information: " + e.getMessage());
     }
 
-    /**
-     * Retrieve all information available on a video
-     * 
-     * @param url Video url
-     * @return Video info
-     * @throws YtDlpException
-     */
-    public static VideoInfo getVideoInfo(String url) throws YtDlpException {
+    return videoInfo;
+  }
 
-        // Build request
-        YtDlpRequest request = new YtDlpRequest(url);
-        request.setOption("dump-json");
-        request.setOption("no-playlist");
-        YtDlpResponse response = YtDlp.execute(request);
+  /**
+   * List formats
+   *
+   * @param url Video url
+   * @return list of formats
+   * @throws YtDlpException
+   */
+  public static List<VideoFormat> getFormats(String url) throws YtDlpException {
+    VideoInfo info = getVideoInfo(url);
+    return info.formats;
+  }
 
-        // Parse result
-        ObjectMapper objectMapper = new ObjectMapper();
-        VideoInfo videoInfo;
+  /**
+   * List thumbnails
+   *
+   * @param url Video url
+   * @return list of thumbnail
+   * @throws YtDlpException
+   */
+  public static List<VideoThumbnail> getThumbnails(String url) throws YtDlpException {
+    VideoInfo info = getVideoInfo(url);
+    return info.thumbnails;
+  }
 
-        try {
-            videoInfo = objectMapper.readValue(response.getOut(), VideoInfo.class);
-        } catch (IOException e) {
-            throw new YtDlpException("Unable to parse video information: " + e.getMessage());
-        }
+  /**
+   * List categories
+   *
+   * @param url Video url
+   * @return list of category
+   * @throws YtDlpException
+   */
+  public static List<String> getCategories(String url) throws YtDlpException {
+    VideoInfo info = getVideoInfo(url);
+    return info.categories;
+  }
 
-        return videoInfo;
-    }
+  /**
+   * List tags
+   *
+   * @param url Video url
+   * @return list of tag
+   * @throws YtDlpException
+   */
+  public static List<String> getTags(String url) throws YtDlpException {
+    VideoInfo info = getVideoInfo(url);
+    return info.tags;
+  }
 
-    /**
-     * List formats
-     * 
-     * @param url Video url
-     * @return list of formats
-     * @throws YtDlpException
-     */
-    public static List<VideoFormat> getFormats(String url) throws YtDlpException {
-        VideoInfo info = getVideoInfo(url);
-        return info.formats;
-    }
+  /**
+   * Get command executable or path to the executable
+   *
+   * @return path string
+   */
+  public static String getExecutablePath() {
+    return executablePath;
+  }
 
-    /**
-     * List thumbnails
-     * 
-     * @param url Video url
-     * @return list of thumbnail
-     * @throws YtDlpException
-     */
-    public static List<VideoThumbnail> getThumbnails(String url) throws YtDlpException {
-        VideoInfo info = getVideoInfo(url);
-        return info.thumbnails;
-    }
-
-    /**
-     * List categories
-     * 
-     * @param url Video url
-     * @return list of category
-     * @throws YtDlpException
-     */
-    public static List<String> getCategories(String url) throws YtDlpException {
-        VideoInfo info = getVideoInfo(url);
-        return info.categories;
-    }
-
-    /**
-     * List tags
-     * 
-     * @param url Video url
-     * @return list of tag
-     * @throws YtDlpException
-     */
-    public static List<String> getTags(String url) throws YtDlpException {
-        VideoInfo info = getVideoInfo(url);
-        return info.tags;
-    }
-
-    /**
-     * Get command executable or path to the executable
-     * 
-     * @return path string
-     */
-    public static String getExecutablePath() {
-        return executablePath;
-    }
-
-    /**
-     * Set path to use for the command
-     * 
-     * @param path String path to the executable
-     */
-    public static void setExecutablePath(String path) {
-        executablePath = path;
-    }
+  /**
+   * Set path to use for the command
+   *
+   * @param path String path to the executable
+   */
+  public static void setExecutablePath(String path) {
+    executablePath = path;
+  }
 }
