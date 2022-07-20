@@ -3,7 +3,6 @@ package com.jfposton.ytdlp;
 import org.junit.Assert;
 import org.junit.Test;
 
-
 public class YtDlpRequestTest {
 
   @Test
