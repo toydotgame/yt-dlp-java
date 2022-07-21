@@ -12,8 +12,7 @@ public class YtDlpResponseTest {
 
   @Test
   public void getFormatsCanHandleLargerVideos() throws YtDlpException {
-    List<VideoFormat> videoFormats =
-        YtDlp.getFormats(String.format("https://www.youtube.com/watch?v=XNSM5RtUgXQ"));
-    assertTrue(videoFormats.get(0).getUrl().contains("XNSM5RtUgXQ"));
+    List<VideoFormat> videoFormats = YtDlp.getFormats("https://www.youtube.com/watch?v=jPTO3lcPpik");
+    assertTrue(videoFormats.get(0).getUrl().contains("jPTO3lcPpik"));
   }
 }
