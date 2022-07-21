@@ -3,13 +3,10 @@ package com.jfposton.ytdlp;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
-import java.util.List;
 
 import org.junit.Test;
 
-import com.jfposton.ytdlp.mapper.VideoFormat;
 import com.jfposton.ytdlp.mapper.VideoInfo;
 
 public class YtDlpResponseTest {
