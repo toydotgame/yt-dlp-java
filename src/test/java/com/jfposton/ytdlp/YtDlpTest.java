@@ -13,12 +13,12 @@ public class YtDlpTest {
 
   private static final String DIRECTORY = System.getProperty("java.io.tmpdir");
   private static final String VIDEO_URL = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
-  private static final String NONE_EXISTENT_VIDEO_URL = "https://www.youtube.com/watch?v=dQw4w9WgXcZ";
+  private static final String NONE_EXISTENT_VIDEO_URL =
+      "https://www.youtube.com/watch?v=dQw4w9WgXcZ";
 
   /**
    * @Test public void testUsingOwnExecutablePath() throws YtDlpException {
-   *       YtDlp.setExecutablePath("/usr/bin/yt-dlp");
-   *       Assert.assertNotNull(YtDlp.getVersion()); }
+   * YtDlp.setExecutablePath("/usr/bin/yt-dlp"); Assert.assertNotNull(YtDlp.getVersion()); }
    */
   @Test
   public void testGetVersion() throws YtDlpException {
