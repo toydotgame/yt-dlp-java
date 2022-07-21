@@ -18,7 +18,7 @@ public class VideoInfo {
   @JsonProperty("display_id")
   private String displayId;
 
-  private int duration;
+  private long duration;
   private String description;
   private String thumbnail;
   private String license;
@@ -71,7 +71,7 @@ public class VideoInfo {
     return displayId;
   }
 
-  public int getDuration() {
+  public long getDuration() {
     return duration;
   }
 
