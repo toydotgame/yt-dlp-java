@@ -89,7 +89,7 @@ public class YtDlp {
 
     StreamProcessExtractor stdOutProcessor =
         new StreamProcessExtractor(outBuffer, outStream, callback);
-    StreamGobbler stdErrProcessor = new StreamGobbler(errBuffer, errStream);
+    StreamGobbler stdErrProcessor = new StreamGobbler(errBuffer, errStream, callback);
 
     try {
       stdOutProcessor.join();
