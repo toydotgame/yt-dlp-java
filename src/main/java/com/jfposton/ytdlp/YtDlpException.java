@@ -2,7 +2,8 @@ package com.jfposton.ytdlp;
 
 /** YtDlp Exception */
 public class YtDlpException extends Exception {
-
+  private static final long serialVersionUID = 2742772789556748309L;
+  
   /** Exception message */
   private String message;
 
