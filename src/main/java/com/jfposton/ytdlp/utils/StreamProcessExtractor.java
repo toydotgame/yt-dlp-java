@@ -17,17 +17,13 @@ public class StreamProcessExtractor extends Thread {
 
   private Pattern percentWithEta =
       Pattern.compile(
-<<<<<<< HEAD
-          "\\[download\\]\\s+(?<"+GROUP_PERCENT+">\\d+\\.\\d)% .* ETA (?<"+GROUP_MINUTES+">\\d+):(?<"+GROUP_SECONDS+">\\d+).*");
-=======
           "\\[download\\]\\s+(?<"
               + GROUP_PERCENT
               + ">\\d+\\.\\d)% .* ETA (?<"
               + GROUP_MINUTES
               + ">\\d+):(?<"
               + GROUP_SECONDS
-              + ">\\d+)");
->>>>>>> 5c3d6fd7465c5d549dca6717764d3333a260b4ae
+              + ">\\d+).*");
   private Pattern percentOnly =
       Pattern.compile("\\[download\\]\\s+(?<" + GROUP_PERCENT + ">\\d+\\.\\d)% .* ETA Unknown.*");
 
