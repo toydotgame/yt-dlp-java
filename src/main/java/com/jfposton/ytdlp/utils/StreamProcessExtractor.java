@@ -44,7 +44,7 @@ public class StreamProcessExtractor extends Thread {
         char c = (char) nextChar;
         buffer.append(c);
         if (callback != null) callback.onOutBufferUpdate(c);
-        if ((nextChar == '\r' || nextChar == '\n') && callback != null) {
+        if (nextChar == '\r' && callback != null) {
           processOutputLine(currentLine.toString());
           currentLine.setLength(0);
           continue;
