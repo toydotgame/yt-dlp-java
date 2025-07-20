@@ -1,5 +1,6 @@
 package com.jfposton.ytdlp;
 
-public interface DownloadProgressCallback {
-  void onProgressUpdate(float progress, long etaInSeconds);
+public abstract class DownloadProgressCallback {
+  public void onProgressUpdate(float progress, long etaInSeconds) {}
+  public void onBufferUpdate(char nextChar) {}
 }

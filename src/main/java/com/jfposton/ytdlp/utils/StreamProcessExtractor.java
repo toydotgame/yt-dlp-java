@@ -15,9 +15,12 @@ public class StreamProcessExtractor extends Thread {
   private StringBuilder buffer;
   private final DownloadProgressCallback callback;
 
-  private Pattern p =
+  private Pattern percentWithEta =
       Pattern.compile(
           "\\[download\\]\\s+(?<percent>\\d+\\.\\d)% .* ETA (?<minutes>\\d+):(?<seconds>\\d+)");
+  private Pattern percentOnly =
+      Pattern.compile(
+          "\\[download\\]\\s+(?<percent>\\d+\\.\\d)% .* ETA Unknown.*");
 
   public StreamProcessExtractor(
       StringBuilder buffer, InputStream stream, DownloadProgressCallback callback) {
@@ -33,13 +36,15 @@ public class StreamProcessExtractor extends Thread {
       StringBuilder currentLine = new StringBuilder();
       int nextChar;
       while ((nextChar = stream.read()) != -1) {
-        buffer.append((char) nextChar);
+        char c = (char)nextChar;
+        buffer.append(c);
+        callback.onBufferUpdate(c);
         if (nextChar == '\r' && callback != null) {
           processOutputLine(currentLine.toString());
           currentLine.setLength(0);
           continue;
         }
-        currentLine.append((char) nextChar);
+        currentLine.append(c);
       }
     } catch (IOException ignored) {
       ignored.printStackTrace();
@@ -47,10 +52,13 @@ public class StreamProcessExtractor extends Thread {
   }
 
   private void processOutputLine(String line) {
-    Matcher m = p.matcher(line);
-    if (m.matches()) {
-      float progress = Float.parseFloat(m.group(GROUP_PERCENT));
-      long eta = convertToSeconds(m.group(GROUP_MINUTES), m.group(GROUP_SECONDS));
+    Matcher matchPercentWithEta = percentWithEta.matcher(line);
+    Matcher matchPercentOnly = percentOnly.matcher(line);
+    if (matchPercentOnly.matches()) {
+      float progress = Float.parseFloat(matchPercentOnly.group(GROUP_PERCENT));
+      long eta = -1;
+      if(matchPercentWithEta.matches())
+        eta = convertToSeconds(matchPercentWithEta.group(GROUP_MINUTES), matchPercentWithEta.group(GROUP_SECONDS));
       callback.onProgressUpdate(progress, eta);
     }
   }
