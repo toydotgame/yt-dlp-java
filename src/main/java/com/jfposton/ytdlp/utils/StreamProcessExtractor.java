@@ -43,8 +43,8 @@ public class StreamProcessExtractor extends Thread {
       while ((nextChar = stream.read()) != -1) {
         char c = (char) nextChar;
         buffer.append(c);
-        if(callback != null) callback.onOutBufferUpdate(c);
-        if((nextChar == '\r' || nextChar == '\n') && callback != null) {
+        if (callback != null) callback.onOutBufferUpdate(c);
+        if ((nextChar == '\r' || nextChar == '\n') && callback != null) {
           processOutputLine(currentLine.toString());
           currentLine.setLength(0);
           continue;
@@ -61,11 +61,13 @@ public class StreamProcessExtractor extends Thread {
     Matcher matchPercentOnly = percentOnly.matcher(line);
     float progress;
     long eta = -1;
-    if(matchPercentWithEta.matches()) {
+    if (matchPercentWithEta.matches()) {
       progress = Float.parseFloat(matchPercentWithEta.group(GROUP_PERCENT));
-      eta = convertToSeconds(matchPercentWithEta.group(GROUP_MINUTES), matchPercentWithEta.group(GROUP_SECONDS));
+      eta =
+          convertToSeconds(
+              matchPercentWithEta.group(GROUP_MINUTES), matchPercentWithEta.group(GROUP_SECONDS));
       callback.onProgressUpdate(progress, eta);
-    } else if(matchPercentOnly.matches()) {
+    } else if (matchPercentOnly.matches()) {
       progress = Float.parseFloat(matchPercentOnly.group(GROUP_PERCENT));
       callback.onProgressUpdate(progress, eta);
     }

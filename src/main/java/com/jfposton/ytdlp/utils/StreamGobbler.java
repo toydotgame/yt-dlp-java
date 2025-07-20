@@ -10,12 +10,14 @@ public class StreamGobbler extends Thread {
   private StringBuilder buffer;
   private DownloadProgressCallback callback;
 
-  public StreamGobbler(StringBuilder buffer, InputStream stream, DownloadProgressCallback callback) {
+  public StreamGobbler(
+      StringBuilder buffer, InputStream stream, DownloadProgressCallback callback) {
     this.stream = stream;
     this.buffer = buffer;
     this.callback = callback;
     start();
   }
+
   public StreamGobbler(StringBuilder buffer, InputStream stream) {
     this(buffer, stream, null);
   }
@@ -25,9 +27,9 @@ public class StreamGobbler extends Thread {
     try {
       int nextChar;
       while ((nextChar = this.stream.read()) != -1) {
-        char c = (char)nextChar;
+        char c = (char) nextChar;
         buffer.append(c);
-        if(callback != null) callback.onErrBufferUpdate(c);
+        if (callback != null) callback.onErrBufferUpdate(c);
       }
     } catch (IOException e) {
       e.printStackTrace();
