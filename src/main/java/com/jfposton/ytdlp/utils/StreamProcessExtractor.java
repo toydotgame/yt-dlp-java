@@ -17,7 +17,7 @@ public class StreamProcessExtractor extends Thread {
 
   private Pattern percentWithEta =
       Pattern.compile(
-          "\\[download\\]\\s+(?<"+GROUP_PERCENT+">\\d+\\.\\d)% .* ETA (?<"+GROUP_MINUTES+">\\d+):(?<"+GROUP_SECONDS+">\\d+)");
+          "\\[download\\]\\s+(?<"+GROUP_PERCENT+">\\d+\\.\\d)% .* ETA (?<"+GROUP_MINUTES+">\\d+):(?<"+GROUP_SECONDS+">\\d+).*");
   private Pattern percentOnly =
       Pattern.compile(
           "\\[download\\]\\s+(?<"+GROUP_PERCENT+">\\d+\\.\\d)% .* ETA Unknown.*");
@@ -39,7 +39,7 @@ public class StreamProcessExtractor extends Thread {
         char c = (char)nextChar;
         buffer.append(c);
         if(callback != null) callback.onOutBufferUpdate(c);
-        if (nextChar == '\r' && callback != null) {
+        if((nextChar == '\r' || nextChar == '\n') && callback != null) {
           processOutputLine(currentLine.toString());
           currentLine.setLength(0);
           continue;
@@ -54,11 +54,14 @@ public class StreamProcessExtractor extends Thread {
   private void processOutputLine(String line) {
     Matcher matchPercentWithEta = percentWithEta.matcher(line);
     Matcher matchPercentOnly = percentOnly.matcher(line);
-    if (matchPercentOnly.matches()) {
-      float progress = Float.parseFloat(matchPercentOnly.group(GROUP_PERCENT));
-      long eta = -1;
-      if(matchPercentWithEta.matches())
-        eta = convertToSeconds(matchPercentWithEta.group(GROUP_MINUTES), matchPercentWithEta.group(GROUP_SECONDS));
+    float progress;
+    long eta = -1;
+    if(matchPercentWithEta.matches()) {
+      progress = Float.parseFloat(matchPercentWithEta.group(GROUP_PERCENT));
+      eta = convertToSeconds(matchPercentWithEta.group(GROUP_MINUTES), matchPercentWithEta.group(GROUP_SECONDS));
+      callback.onProgressUpdate(progress, eta);
+    } else if(matchPercentOnly.matches()) {
+      progress = Float.parseFloat(matchPercentOnly.group(GROUP_PERCENT));
       callback.onProgressUpdate(progress, eta);
     }
   }
