@@ -17,10 +17,10 @@ public class StreamProcessExtractor extends Thread {
 
   private Pattern percentWithEta =
       Pattern.compile(
-          "\\[download\\]\\s+(?<percent>\\d+\\.\\d)% .* ETA (?<minutes>\\d+):(?<seconds>\\d+)");
+          "\\[download\\]\\s+(?<"+GROUP_PERCENT+">\\d+\\.\\d)% .* ETA (?<"+GROUP_MINUTES+">\\d+):(?<"+GROUP_SECONDS+">\\d+)");
   private Pattern percentOnly =
       Pattern.compile(
-          "\\[download\\]\\s+(?<percent>\\d+\\.\\d)% .* ETA Unknown.*");
+          "\\[download\\]\\s+(?<"+GROUP_PERCENT+">\\d+\\.\\d)% .* ETA Unknown.*");
 
   public StreamProcessExtractor(
       StringBuilder buffer, InputStream stream, DownloadProgressCallback callback) {
